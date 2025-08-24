@@ -1,0 +1,241 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Ipertech API",
+    "description": "API per accedere al catalogo prodotti, ordini e spedizioni di Ipertech.",
+    "description_en": "API to access Ipertech's product catalog, orders, and shipping information.",
+    "description_de": "API zum Zugriff auf das Produktkatalog, Bestellungen und Versand von Ipertech.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://ipertech.it/api",
+      "description": "Ipertech main API server"
+    }
+  ],
+  "externalDocs": {
+    "description": "Swagger UI Documentation",
+    "url": "https://ipertech.it/pages/ipertech-api-docs"
+  },
+  "paths": {
+    "/products": {
+      "get": {
+        "summary": {
+          "it": "Elenco dei prodotti",
+          "en": "List of products",
+          "de": "Produktliste"
+        },
+        "description": {
+          "it": "Ottiene la lista dei prodotti disponibili",
+          "en": "Retrieves the list of available products",
+          "de": "Gibt die Liste der verfügbaren Produkte zurück"
+        },
+        "responses": {
+          "200": {
+            "description": "Successo",
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "id": "prd_001",
+                    "name": {
+                      "it": "TV Samsung 55\"",
+                      "en": "Samsung TV 55\"",
+                      "de": "Samsung TV 55\""
+                    },
+                    "price": 499.99
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders": {
+      "post": {
+        "summary": {
+          "it": "Crea un ordine",
+          "en": "Create order",
+          "de": "Bestellung erstellen"
+        },
+        "description": {
+          "it": "Invia un ordine con i dati del cliente",
+          "en": "Submit an order with customer data",
+          "de": "Senden Sie eine Bestellung mit Kundendaten"
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "customer_name": "John Doe",
+                "products": [
+                  {
+                    "id": "prd_001",
+                    "quantity": 1
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Ordine creato"
+          }
+        }
+      }
+    },
+    "/payments": {
+      "get": {
+        "summary": {
+          "it": "Metodi di pagamento supportati",
+          "en": "Supported payment methods",
+          "de": "Unterstützte Zahlungsmethoden"
+        },
+        "description": {
+          "it": "Elenco dei metodi di pagamento disponibili",
+          "en": "List of available payment methods",
+          "de": "Liste der verfügbaren Zahlungsmethoden"
+        },
+        "responses": {
+          "200": {
+            "description": "Successo",
+            "content": {
+              "application/json": {
+                "example": [
+                  "credit_card",
+                  "paypal",
+                  "klarna",
+                  "cash_on_delivery"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders/{order_id}/tracking": {
+      "get": {
+        "summary": {
+          "it": "Tracking spedizione",
+          "en": "Shipping tracking",
+          "de": "Sendungsverfolgung"
+        },
+        "description": {
+          "it": "Ottiene le informazioni di tracking per un ordine",
+          "en": "Get tracking info for an order",
+          "de": "Holt Tracking-Informationen für eine Bestellung"
+        },
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successo",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrackingInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders/{order_id}/status": {
+      "get": {
+        "summary": {
+          "it": "Stato dell'ordine",
+          "en": "Order status",
+          "de": "Bestellstatus"
+        },
+        "description": {
+          "it": "Restituisce lo stato attuale di un ordine",
+          "en": "Returns current status of an order",
+          "de": "Gibt den aktuellen Status einer Bestellung zurück"
+        },
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successo",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-KEY"
+      }
+    },
+    "schemas": {
+      "OrderStatus": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "confirmed",
+          "shipped",
+          "delivered",
+          "cancelled"
+        ]
+      },
+      "PaymentMethod": {
+        "type": "string",
+        "enum": [
+          "credit_card",
+          "paypal",
+          "klarna",
+          "cash_on_delivery"
+        ]
+      },
+      "TrackingInfo": {
+        "type": "object",
+        "properties": {
+          "carrier": {
+            "type": "string"
+          },
+          "tracking_number": {
+            "type": "string"
+          },
+          "tracking_url": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "ApiKeyAuth": []
+    }
+  ]
+}
