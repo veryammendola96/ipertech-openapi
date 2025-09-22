@@ -3,8 +3,6 @@
   "info": {
     "title": "Ipertech API",
     "description": "API per accedere al catalogo prodotti, ordini e spedizioni di Ipertech.",
-    "description_en": "API to access Ipertech's product catalog, orders, and shipping information.",
-    "description_de": "API zum Zugriff auf das Produktkatalog, Bestellungen und Versand von Ipertech.",
     "version": "1.0.0"
   },
   "servers": [
@@ -20,29 +18,17 @@
   "paths": {
     "/products": {
       "get": {
-        "summary": {
-          "it": "Elenco dei prodotti",
-          "en": "List of products",
-          "de": "Produktliste"
-        },
-        "description": {
-          "it": "Ottiene la lista dei prodotti disponibili",
-          "en": "Retrieves the list of available products",
-          "de": "Gibt die Liste der verfügbaren Produkte zurück"
-        },
+        "summary": "List of products",
+        "description": "Retrieve the list of available products",
         "responses": {
           "200": {
-            "description": "Successo",
+            "description": "Success",
             "content": {
               "application/json": {
                 "example": [
                   {
                     "id": "prd_001",
-                    "name": {
-                      "it": "TV Samsung 55\"",
-                      "en": "Samsung TV 55\"",
-                      "de": "Samsung TV 55\""
-                    },
+                    "name": "Samsung TV 55\"",
                     "price": 499.99
                   }
                 ]
@@ -54,16 +40,8 @@
     },
     "/orders": {
       "post": {
-        "summary": {
-          "it": "Crea un ordine",
-          "en": "Create order",
-          "de": "Bestellung erstellen"
-        },
-        "description": {
-          "it": "Invia un ordine con i dati del cliente",
-          "en": "Submit an order with customer data",
-          "de": "Senden Sie eine Bestellung mit Kundendaten"
-        },
+        "summary": "Create order",
+        "description": "Submit an order with customer data",
         "requestBody": {
           "required": true,
           "content": {
@@ -82,26 +60,18 @@
         },
         "responses": {
           "201": {
-            "description": "Ordine creato"
+            "description": "Order created"
           }
         }
       }
     },
     "/payments": {
       "get": {
-        "summary": {
-          "it": "Metodi di pagamento supportati",
-          "en": "Supported payment methods",
-          "de": "Unterstützte Zahlungsmethoden"
-        },
-        "description": {
-          "it": "Elenco dei metodi di pagamento disponibili",
-          "en": "List of available payment methods",
-          "de": "Liste der verfügbaren Zahlungsmethoden"
-        },
+        "summary": "Supported payment methods",
+        "description": "List of available payment methods",
         "responses": {
           "200": {
-            "description": "Successo",
+            "description": "Success",
             "content": {
               "application/json": {
                 "example": [
@@ -118,16 +88,8 @@
     },
     "/orders/{order_id}/tracking": {
       "get": {
-        "summary": {
-          "it": "Tracking spedizione",
-          "en": "Shipping tracking",
-          "de": "Sendungsverfolgung"
-        },
-        "description": {
-          "it": "Ottiene le informazioni di tracking per un ordine",
-          "en": "Get tracking info for an order",
-          "de": "Holt Tracking-Informationen für eine Bestellung"
-        },
+        "summary": "Shipping tracking",
+        "description": "Get tracking info for an order",
         "parameters": [
           {
             "name": "order_id",
@@ -140,7 +102,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successo",
+            "description": "Success",
             "content": {
               "application/json": {
                 "schema": {
@@ -154,16 +116,8 @@
     },
     "/orders/{order_id}/status": {
       "get": {
-        "summary": {
-          "it": "Stato dell'ordine",
-          "en": "Order status",
-          "de": "Bestellstatus"
-        },
-        "description": {
-          "it": "Restituisce lo stato attuale di un ordine",
-          "en": "Returns current status of an order",
-          "de": "Gibt den aktuellen Status einer Bestellung zurück"
-        },
+        "summary": "Order status",
+        "description": "Return current status of an order",
         "parameters": [
           {
             "name": "order_id",
@@ -176,7 +130,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successo",
+            "description": "Success",
             "content": {
               "application/json": {
                 "schema": {
@@ -190,37 +144,38 @@
     }
   },
   "components": {
-  "schemas": {
-    "OrderStatus": {
-      "type": "string",
-      "enum": [
-        "pending",
-        "confirmed",
-        "shipped",
-        "delivered",
-        "cancelled"
-      ]
-    },
-    "PaymentMethod": {
-      "type": "string",
-      "enum": [
-        "credit_card",
-        "paypal",
-        "klarna",
-        "cash_on_delivery"
-      ]
-    },
-    "TrackingInfo": {
-      "type": "object",
-      "properties": {
-        "carrier": {
-          "type": "string"
-        },
-        "tracking_number": {
-          "type": "string"
-        },
-        "tracking_url": {
-          "type": "string"
+    "schemas": {
+      "OrderStatus": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "confirmed",
+          "shipped",
+          "delivered",
+          "cancelled"
+        ]
+      },
+      "PaymentMethod": {
+        "type": "string",
+        "enum": [
+          "credit_card",
+          "paypal",
+          "klarna",
+          "cash_on_delivery"
+        ]
+      },
+      "TrackingInfo": {
+        "type": "object",
+        "properties": {
+          "carrier": {
+            "type": "string"
+          },
+          "tracking_number": {
+            "type": "string"
+          },
+          "tracking_url": {
+            "type": "string"
+          }
         }
       }
     }
