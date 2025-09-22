@@ -18,163 +18,284 @@
   "paths": {
     "/products": {
       "get": {
+        "operationId": "listProducts",
         "summary": "List of products",
-        "description": "Retrieve the list of available products",
+        "description": "Retrieve the list of available products.",
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Products retrieved",
             "content": {
               "application/json": {
-                "example": [
-                  {
-                    "id": "prd_001",
-                    "name": "Samsung TV 55\"",
-                    "price": 499.99
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Product" }
+                },
+                "examples": {
+                  "sample": {
+                    "value": [
+                      { "id": "prd_001", "name": "Samsung TV 55\"", "price": 499.99, "currency": "EUR" }
+                    ]
                   }
-                ]
+                }
               }
             }
-          }
+          },
+          "500": { "$ref": "#/components/responses/ServerError" }
+        }
+      }
+    },
+    "/payments": {
+      "get": {
+        "operationId": "listPaymentMethods",
+        "summary": "Supported payment methods",
+        "description": "List of available payment methods.",
+        "responses": {
+          "200": {
+            "description": "Payment methods",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/PaymentMethod" }
+                },
+                "examples": {
+                  "sample": {
+                    "value": ["credit_card", "paypal", "klarna", "cash_on_delivery"]
+                  }
+                }
+              }
+            }
+          },
+          "500": { "$ref": "#/components/responses/ServerError" }
         }
       }
     },
     "/orders": {
       "post": {
+        "operationId": "createOrder",
         "summary": "Create order",
-        "description": "Submit an order with customer data",
+        "description": "Submit an order with customer data and line items.",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "example": {
-                "customer_name": "John Doe",
-                "products": [
-                  {
-                    "id": "prd_001",
-                    "quantity": 1
+              "schema": { "$ref": "#/components/schemas/CreateOrderRequest" },
+              "examples": {
+                "sample": {
+                  "value": {
+                    "customer_name": "John Doe",
+                    "email": "john@example.com",
+                    "products": [
+                      { "product_id": "prd_001", "quantity": 1 }
+                    ],
+                    "payment_method": "credit_card"
                   }
-                ]
+                }
               }
             }
           }
         },
         "responses": {
           "201": {
-            "description": "Order created"
-          }
-        }
-      }
-    },
-    "/payments": {
-      "get": {
-        "summary": "Supported payment methods",
-        "description": "List of available payment methods",
-        "responses": {
-          "200": {
-            "description": "Success",
+            "description": "Order created",
             "content": {
               "application/json": {
-                "example": [
-                  "credit_card",
-                  "paypal",
-                  "klarna",
-                  "cash_on_delivery"
-                ]
-              }
-            }
-          }
-        }
-      }
-    },
-    "/orders/{order_id}/tracking": {
-      "get": {
-        "summary": "Shipping tracking",
-        "description": "Get tracking info for an order",
-        "parameters": [
-          {
-            "name": "order_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TrackingInfo"
+                "schema": { "$ref": "#/components/schemas/OrderCreated" },
+                "examples": {
+                  "sample": {
+                    "value": { "order_id": "ord_123", "status": "pending" }
+                  }
                 }
               }
             }
-          }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "500": { "$ref": "#/components/responses/ServerError" }
         }
       }
     },
     "/orders/{order_id}/status": {
       "get": {
+        "operationId": "getOrderStatus",
         "summary": "Order status",
-        "description": "Return current status of an order",
+        "description": "Return current status of an order.",
         "parameters": [
           {
             "name": "order_id",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Order status",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OrderStatus"
+                "schema": { "$ref": "#/components/schemas/OrderStatusResponse" },
+                "examples": {
+                  "sample": {
+                    "value": { "order_id": "ord_123", "status": "shipped" }
+                  }
                 }
               }
             }
+          },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "500": { "$ref": "#/components/responses/ServerError" }
+        }
+      }
+    },
+    "/orders/{order_id}/tracking": {
+      "get": {
+        "operationId": "getOrderTracking",
+        "summary": "Shipping tracking",
+        "description": "Get tracking info for an order.",
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
           }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tracking info",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/TrackingInfo" },
+                "examples": {
+                  "sample": {
+                    "value": {
+                      "carrier": "DHL",
+                      "tracking_number": "DHL123456",
+                      "tracking_url": "https://dhl.example/track/DHL123456"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "500": { "$ref": "#/components/responses/ServerError" }
         }
       }
     }
   },
   "components": {
     "schemas": {
-      "OrderStatus": {
-        "type": "string",
-        "enum": [
-          "pending",
-          "confirmed",
-          "shipped",
-          "delivered",
-          "cancelled"
-        ]
+      "Product": {
+        "type": "object",
+        "required": ["id", "name", "price"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "price": { "type": "number" },
+          "currency": { "type": "string", "default": "EUR" },
+          "image_url": { "type": "string" },
+          "description": { "type": "string" }
+        }
       },
       "PaymentMethod": {
         "type": "string",
-        "enum": [
-          "credit_card",
-          "paypal",
-          "klarna",
-          "cash_on_delivery"
-        ]
+        "enum": ["credit_card", "paypal", "klarna", "cash_on_delivery"]
+      },
+      "OrderStatus": {
+        "type": "string",
+        "enum": ["pending", "confirmed", "shipped", "delivered", "cancelled"]
+      },
+      "OrderStatusResponse": {
+        "type": "object",
+        "required": ["order_id", "status"],
+        "properties": {
+          "order_id": { "type": "string" },
+          "status": { "$ref": "#/components/schemas/OrderStatus" }
+        }
+      },
+      "OrderLineItem": {
+        "type": "object",
+        "required": ["product_id", "quantity"],
+        "properties": {
+          "product_id": { "type": "string" },
+          "quantity": { "type": "integer", "minimum": 1 }
+        }
+      },
+      "CreateOrderRequest": {
+        "type": "object",
+        "required": ["customer_name", "products"],
+        "properties": {
+          "customer_name": { "type": "string" },
+          "email": { "type": "string", "format": "email" },
+          "address": { "$ref": "#/components/schemas/ShippingAddress" },
+          "products": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/OrderLineItem" },
+            "minItems": 1
+          },
+          "payment_method": { "$ref": "#/components/schemas/PaymentMethod" }
+        }
+      },
+      "OrderCreated": {
+        "type": "object",
+        "required": ["order_id", "status"],
+        "properties": {
+          "order_id": { "type": "string" },
+          "status": { "$ref": "#/components/schemas/OrderStatus" }
+        }
+      },
+      "ShippingAddress": {
+        "type": "object",
+        "properties": {
+          "street": { "type": "string" },
+          "city": { "type": "string" },
+          "postal_code": { "type": "string" },
+          "country": { "type": "string" }
+        }
       },
       "TrackingInfo": {
         "type": "object",
+        "required": ["carrier", "tracking_number"],
         "properties": {
-          "carrier": {
-            "type": "string"
-          },
-          "tracking_number": {
-            "type": "string"
-          },
-          "tracking_url": {
-            "type": "string"
+          "carrier": { "type": "string" },
+          "tracking_number": { "type": "string" },
+          "tracking_url": { "type": "string" }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "required": ["message"],
+        "properties": {
+          "code": { "type": "string" },
+          "message": { "type": "string" }
+        }
+      }
+    },
+    "responses": {
+      "BadRequest": {
+        "description": "Bad request",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" },
+            "examples": { "sample": { "value": { "code": "BAD_REQUEST", "message": "Invalid input" } } }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Not found",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" },
+            "examples": { "sample": { "value": { "code": "NOT_FOUND", "message": "Resource not found" } } }
+          }
+        }
+      },
+      "ServerError": {
+        "description": "Server error",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" },
+            "examples": { "sample": { "value": { "code": "SERVER_ERROR", "message": "Unexpected error" } } }
           }
         }
       }
