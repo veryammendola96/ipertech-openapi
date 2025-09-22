@@ -2,100 +2,81 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Ipertech API",
-    "description": "API per accedere al catalogo prodotti, ordini e spedizioni di Ipertech.",
+    "description": "API to access Ipertech product catalog, orders and shipping information.",
     "version": "1.0.0"
   },
   "servers": [
-    { "url": "https://ipertech.it/api", "description": "Ipertech main API server" }
-  ],
-  "tags": [
-    { "name": "Products" },
-    { "name": "Orders" },
-    { "name": "Payments" }
+    { "url": "https://ipertech.it/api" }
   ],
   "paths": {
     "/products": {
       "get": {
         "operationId": "listProducts",
-        "tags": ["Products"],
         "summary": "List products",
         "description": "Retrieve the list of available products.",
-        "parameters": [
-          {
-            "name": "q",
-            "in": "query",
-            "required": false,
-            "description": "Search term",
-            "schema": { "type": "string" }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "description": "Max items to return",
-            "schema": { "type": "integer", "minimum": 1, "maximum": 100, "default": 20 }
-          }
-        ],
         "responses": {
           "200": {
             "description": "Products retrieved",
             "content": {
               "application/json": {
-                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Product" } }
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Product" }
+                }
               }
             }
-          },
-          "500": { "$ref": "#/components/responses/ServerError" }
-        }
-      }
-    },
-    "/payments": {
-      "get": {
-        "operationId": "listPaymentMethods",
-        "tags": ["Payments"],
-        "summary": "Supported payment methods",
-        "description": "List of available payment methods.",
-        "responses": {
-          "200": {
-            "description": "Payment methods",
-            "content": {
-              "application/json": {
-                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/PaymentMethod" } }
-              }
-            }
-          },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          }
         }
       }
     },
     "/orders": {
       "post": {
         "operationId": "createOrder",
-        "tags": ["Orders"],
         "summary": "Create order",
         "description": "Submit an order with customer data and line items.",
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": { "schema": { "$ref": "#/components/schemas/CreateOrderRequest" } }
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateOrderRequest" }
+            }
           }
         },
         "responses": {
           "201": {
             "description": "Order created",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/OrderCreated" } }
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/OrderCreated" }
+              }
             }
-          },
-          "400": { "$ref": "#/components/responses/BadRequest" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          }
+        }
+      }
+    },
+    "/payments": {
+      "get": {
+        "operationId": "listPaymentMethods",
+        "summary": "Supported payment methods",
+        "description": "List of available payment methods.",
+        "responses": {
+          "200": {
+            "description": "Payment methods retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/PaymentMethod" }
+                }
+              }
+            }
+          }
         }
       }
     },
     "/orders/{order_id}/status": {
       "get": {
         "operationId": "getOrderStatus",
-        "tags": ["Orders"],
         "summary": "Order status",
         "description": "Return current status of an order.",
         "parameters": [
@@ -103,46 +84,43 @@
             "name": "order_id",
             "in": "path",
             "required": true,
-            "description": "Order identifier",
             "schema": { "type": "string" }
           }
         ],
         "responses": {
           "200": {
-            "description": "Order status",
+            "description": "Order status retrieved",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/OrderStatusResponse" } }
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/OrderStatusResponse" }
+              }
             }
-          },
-          "404": { "$ref": "#/components/responses/NotFound" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          }
         }
       }
     },
     "/orders/{order_id}/tracking": {
       "get": {
         "operationId": "getOrderTracking",
-        "tags": ["Orders"],
-        "summary": "Shipping tracking",
-        "description": "Get tracking info for an order.",
+        "summary": "Order tracking",
+        "description": "Retrieve tracking info for an order.",
         "parameters": [
           {
             "name": "order_id",
             "in": "path",
             "required": true,
-            "description": "Order identifier",
             "schema": { "type": "string" }
           }
         ],
         "responses": {
           "200": {
-            "description": "Tracking info",
+            "description": "Tracking info retrieved",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/TrackingInfo" } }
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/TrackingInfo" }
+              }
             }
-          },
-          "404": { "$ref": "#/components/responses/NotFound" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          }
         }
       }
     }
@@ -151,14 +129,13 @@
     "schemas": {
       "Product": {
         "type": "object",
-        "required": ["id", "name", "price"],
         "properties": {
-          "id": { "type": "string", "description": "Product identifier" },
-          "name": { "type": "string", "description": "Product name" },
-          "price": { "type": "number", "description": "Unit price" },
-          "currency": { "type": "string", "description": "ISO currency code", "default": "EUR" },
-          "image_url": { "type": "string", "description": "Image URL" },
-          "description": { "type": "string", "description": "Short description" }
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "price": { "type": "number" },
+          "currency": { "type": "string" },
+          "image_url": { "type": "string" },
+          "description": { "type": "string" }
         }
       },
       "PaymentMethod": {
@@ -171,7 +148,6 @@
       },
       "OrderStatusResponse": {
         "type": "object",
-        "required": ["order_id", "status"],
         "properties": {
           "order_id": { "type": "string" },
           "status": { "$ref": "#/components/schemas/OrderStatus" }
@@ -179,62 +155,39 @@
       },
       "OrderLineItem": {
         "type": "object",
-        "required": ["product_id", "quantity"],
         "properties": {
           "product_id": { "type": "string" },
-          "quantity": { "type": "integer", "minimum": 1 }
-        }
-      },
-      "ShippingAddress": {
-        "type": "object",
-        "properties": {
-          "street": { "type": "string" },
-          "city": { "type": "string" },
-          "postal_code": { "type": "string" },
-          "country": { "type": "string" }
+          "quantity": { "type": "integer" }
         }
       },
       "CreateOrderRequest": {
         "type": "object",
-        "required": ["customer_name", "products"],
         "properties": {
           "customer_name": { "type": "string" },
-          "email": { "type": "string", "format": "email" },
-          "address": { "$ref": "#/components/schemas/ShippingAddress" },
-          "products": { "type": "array", "items": { "$ref": "#/components/schemas/OrderLineItem" }, "minItems": 1 },
+          "email": { "type": "string" },
+          "products": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/OrderLineItem" }
+          },
           "payment_method": { "$ref": "#/components/schemas/PaymentMethod" }
         }
       },
       "OrderCreated": {
         "type": "object",
-        "required": ["order_id", "status"],
         "properties": {
           "order_id": { "type": "string" },
           "status": { "$ref": "#/components/schemas/OrderStatus" }
         }
       },
-      "Error": {
+      "TrackingInfo": {
         "type": "object",
-        "required": ["message"],
         "properties": {
-          "code": { "type": "string" },
-          "message": { "type": "string" }
+          "carrier": { "type": "string" },
+          "tracking_number": { "type": "string" },
+          "tracking_url": { "type": "string" }
         }
-      }
-    },
-    "responses": {
-      "BadRequest": {
-        "description": "Bad request",
-        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } }
-      },
-      "NotFound": {
-        "description": "Not found",
-        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } }
-      },
-      "ServerError": {
-        "description": "Server error",
-        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } }
       }
     }
   }
 }
+
