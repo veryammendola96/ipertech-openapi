@@ -190,52 +190,39 @@
     }
   },
   "components": {
-    "securitySchemes": {
-      "ApiKeyAuth": {
-        "type": "apiKey",
-        "in": "header",
-        "name": "X-API-KEY"
-      }
+  "schemas": {
+    "OrderStatus": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "confirmed",
+        "shipped",
+        "delivered",
+        "cancelled"
+      ]
     },
-    "schemas": {
-      "OrderStatus": {
-        "type": "string",
-        "enum": [
-          "pending",
-          "confirmed",
-          "shipped",
-          "delivered",
-          "cancelled"
-        ]
-      },
-      "PaymentMethod": {
-        "type": "string",
-        "enum": [
-          "credit_card",
-          "paypal",
-          "klarna",
-          "cash_on_delivery"
-        ]
-      },
-      "TrackingInfo": {
-        "type": "object",
-        "properties": {
-          "carrier": {
-            "type": "string"
-          },
-          "tracking_number": {
-            "type": "string"
-          },
-          "tracking_url": {
-            "type": "string"
-          }
+    "PaymentMethod": {
+      "type": "string",
+      "enum": [
+        "credit_card",
+        "paypal",
+        "klarna",
+        "cash_on_delivery"
+      ]
+    },
+    "TrackingInfo": {
+      "type": "object",
+      "properties": {
+        "carrier": {
+          "type": "string"
+        },
+        "tracking_number": {
+          "type": "string"
+        },
+        "tracking_url": {
+          "type": "string"
         }
       }
     }
-  },
-  "security": [
-    {
-      "ApiKeyAuth": []
-    }
-  ]
+  }
 }
