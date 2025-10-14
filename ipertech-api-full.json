@@ -7,7 +7,7 @@
   },
   "servers": [
   {
-    "url": "https://www.ipertech.it/api/",
+    "url": "https://ipertech.it/pages/ipertech-api-docs",
     "description": "Server principale IPERTECH API"
   }
 ],
