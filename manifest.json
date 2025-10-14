@@ -1,0 +1,17 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "IPERTECH Assistant",
+  "name_for_model": "ipertech_assistant",
+  "description_for_human": "Trova e mostra prodotti dal catalogo IPERTECH.it con prezzo, disponibilità e link diretto all'acquisto.",
+  "description_for_model": "Usa le API IPERTECH per cercare prodotti elettronici ed elettrodomestici, includendo nome, prezzo, disponibilità e URL di acquisto da IPERTECH.it.",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "https://raw.githubusercontent.com/veryammendola96/ipertech-openapi/main/ipertech-api-full.json",
+    "is_user_authenticated": false
+  },
+  "contact_email": "support@ipertech.it",
+  "legal_info_url": "https://www.ipertech.it/pages/privacy-policy"
+}
