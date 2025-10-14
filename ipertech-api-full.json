@@ -6,8 +6,11 @@
     "version": "1.0.0"
   },
   "servers": [
-    { "url": "https://ipertech.it/api" }
-  ],
+  {
+    "url": "https://api.ipertech.it",
+    "description": "Server principale IPERTECH API"
+  }
+],
   "paths": {
     "/products": {
       "get": {
